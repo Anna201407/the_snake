@@ -27,7 +27,7 @@ APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
-SPEED = 20
+SPEED = 10
 
 # Настройка игрового окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -37,30 +37,56 @@ pygame.display.set_caption('Змейка')
 
 # Настройка времени:
 clock = pygame.time.Clock()
-
-
-# Тут опишите все классы игры.
 class GameObject:
     """
     Базовый класс, от которого наследуются все объекты.
-    Содержит общие атрибуты: позиция и цвет.
+    содержит общие атрибут: позиция и цвет.
     """
+
     def __init__(self, position=None, body_color=None):
         """
         Конструктор базового игрового объекта.
-        Аргументы: position (координаты), baby_color (цвет).
+        Аргументы: position (координаты), body_color(цвет).
         """
         if position is None:
-            self.position = (320, 240)
+            self.position=(320, 240)
         else:
-            self.boby_color = boby_color
+            self.position=position
     def draw(self, surface):
         """
-        Метод для отрисовки объекта на экране.
-        Аргумент: surface (поверхность, на которой рисуем)
+        Абстрактный метод для отрисовки объекта на экране.
+        Аргумент: surface(поверхность, на которой рисуем)
         """
         pass
-        
+
+class Apple(GameObject):
+     """Класс, описывающий яблоко."""
+
+     def __init__(self):
+         """Инициализация яблока со случайной позицией."""
+         super().__init__(body_color=APPLE_COLOR)
+         self.randomize_position()
+
+     def randomize_position(self):
+         """Устанавливает случайное положение яблока на игровом поле."""
+        self.position = (
+            randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        )
+
+    def draw(self, surface):
+        """Отрисовывает яблоко на игровой поверхности."""
+        rect = pygame.Rect(
+            self.position[0],
+            self.position[1],
+            GRID_SIZE,
+            GRID_SIZE
+        )
+         pygame.draw.rect(surface, self.body_color, rect)
+         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+
+# Тут опишите все классы игры.
+
 # Метод draw класса Apple
 # def draw(self):
 #     rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
