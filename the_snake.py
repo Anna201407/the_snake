@@ -126,7 +126,42 @@ class Snake(GameObject):
                 self.last = self.positions.pop()
             else:
                 self.last = None
+                
+    def draw(self, surface):
+        """Отрисовывает змейку на экране."""
+        # Отрисовка тела змейки (кроме головы)
+        for position in self.positions[:-1]:
+            rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(surface, self.body_color, rect)
+            pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
+        # Отрисовка головы змейки
+        if self.positions:
+            head_rect = pygame.Rect(
+                self.positions[0],
+                (GRID_SIZE, GRID_SIZE)
+            )
+            pygame.draw.rect(surface, self.body_color, head_rect)
+            pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
+
+        # Затирание последнего сегмента
+        if self.last:
+            last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
+
+    def get_head_position(self):
+        """Возвращает позицию головы змейки."""
+        return self.positions[0]
+
+    def reset(self):
+        """Сбрасывает змейку в начальное состояние."""
+        self.length = 1
+        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.direction = choice([RIGHT, LEFT, UP, DOWN])
+        self.next_direction = None
+        self.last = None
+        # Очищаем экран
+        screen.fill(BOARD_BACKGROUND_COLOR)
 # Тут опишите все классы игры.
 
 # Метод draw класса Apple
