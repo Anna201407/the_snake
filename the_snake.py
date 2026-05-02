@@ -87,6 +87,52 @@ class Apple(GameObject):
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
+class Snake(GameObject):
+    """Класс, описывающий змейку."""
+
+    def __init__(self):
+        """Инициализация начального состояния змейки."""
+        super().__init__(body_color=SNAKE_COLOR)
+        self.reset()
+
+    def reset(self):
+        """Сбрасывает змейку в начальное состояние."""
+        self.length = 1
+        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
+        self.next_direction = None
+        self.last = None
+
+    def update_direction(self):
+        """Обновляет направление движения змейки."""
+        if self.next_direction:
+            self.direction = self.next_direction
+            self.next_direction = None
+
+    def move(self):
+        """Обновляет позицию змейки."""
+        head_x, head_y = self.get_head_position()
+        dx, dy = self.direction
+
+        # Вычисляем новую позицию головы с учётом оборачивания
+        new_head = (
+            (head_x + dx * GRID_SIZE) % SCREEN_WIDTH,
+            (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
+        )
+
+        # Проверяем столкновение с собой
+        if len(self.positions) > 2 and new_head in self.positions[2:]:
+            self.reset()
+        else:
+            # Добавляем новую голову в начало списка
+            self.positions.insert(0, new_head)
+
+            # Если длина змейки превышает установленную, удаляем хвост
+            if len(self.positions) > self.length:
+                self.last = self.positions.pop()
+            else:
+                self.last = None
+
 # Тут опишите все классы игры.
 
 # Метод draw класса Apple
