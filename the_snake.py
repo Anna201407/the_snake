@@ -132,6 +132,7 @@ class Snake(GameObject):
                 self.last = self.positions.pop()
             else:
                 self.last = None
+                
 
 # Тут опишите все классы игры.
 
